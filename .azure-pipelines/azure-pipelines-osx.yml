@@ -17,6 +17,9 @@ jobs:
       osx_64_boost1.72.0python3.8.____cpython:
         CONFIG: osx_64_boost1.72.0python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
+      osx_64_boost1.72.0python3.9.____cpython:
+        CONFIG: osx_64_boost1.72.0python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
       osx_64_boost1.74.0python3.6.____cpython:
         CONFIG: osx_64_boost1.74.0python3.6.____cpython
         UPLOAD_PACKAGES: 'True'
@@ -25,6 +28,9 @@ jobs:
         UPLOAD_PACKAGES: 'True'
       osx_64_boost1.74.0python3.8.____cpython:
         CONFIG: osx_64_boost1.74.0python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+      osx_64_boost1.74.0python3.9.____cpython:
+        CONFIG: osx_64_boost1.74.0python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
   timeoutInMinutes: 360
 
