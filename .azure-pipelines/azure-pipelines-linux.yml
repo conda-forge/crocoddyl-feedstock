@@ -20,6 +20,10 @@ jobs:
         CONFIG: linux_64_boost1.72.0python3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-comp7
+      linux_64_boost1.72.0python3.9.____cpython:
+        CONFIG: linux_64_boost1.72.0python3.9.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-comp7
       linux_64_boost1.74.0python3.6.____cpython:
         CONFIG: linux_64_boost1.74.0python3.6.____cpython
         UPLOAD_PACKAGES: 'True'
@@ -30,6 +34,10 @@ jobs:
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-comp7
       linux_64_boost1.74.0python3.8.____cpython:
         CONFIG: linux_64_boost1.74.0python3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-comp7
+      linux_64_boost1.74.0python3.9.____cpython:
+        CONFIG: linux_64_boost1.74.0python3.9.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-comp7
   timeoutInMinutes: 360
