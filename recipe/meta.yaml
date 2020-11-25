@@ -10,7 +10,7 @@ source:
   sha256: ef2cc3e7ccf221900df20c6513f01ee30b49c55aa2d00421b5dedcc0cf061266
 
 build:
-  number: 2
+  number: 3
   skip: True  # [win]
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x') }}
@@ -45,7 +45,7 @@ test:
 
 about:
   home: http://github.com/loco-3d/crocoddyl
-  license: BSD-2-Clause
+  license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
   summary: Crocoddyl is an optimal control library for robot control under contact sequence. Its solver is based on various efficient Differential Dynamic Programming (DDP)-like algorithms.
