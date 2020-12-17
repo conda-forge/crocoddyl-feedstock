@@ -3,7 +3,7 @@ About crocoddyl
 
 Home: http://github.com/loco-3d/crocoddyl
 
-Package license: BSD-2-Clause
+Package license: BSD-3-Clause
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/crocoddyl-feedstock/blob/master/LICENSE.txt)
 
