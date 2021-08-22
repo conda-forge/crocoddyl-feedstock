@@ -9,6 +9,7 @@ export TARGET_SP_DIR=$SP_DIR
 if [[ $CONDA_BUILD_CROSS_COMPILATION == 1 ]]; then
   echo "Copying files from $BUILD_SP_DIR to $TARGET_SP_DIR"
   cp -r $BUILD_SP_DIR/pinocchio $TARGET_SP_DIR/pinocchio
+  cp -r $BUILD_SP_DIR/numpy $TARGET_SP_DIR/numpy
 fi
 
 cmake ${CMAKE_ARGS} .. \
