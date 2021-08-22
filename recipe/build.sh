@@ -3,13 +3,12 @@
 mkdir build
 cd build
 
-if [[ $CONDA_BUILD_CROSS_COMPILATION == 1 ]]; then
-  export BUILD_NUMPY_INCLUDE_DIRS=$( $PYTHON -c "import numpy; print (numpy.get_include())")
-  export TARGET_NUMPY_INCLUDE_DIRS=$SP_DIR/numpy/core/include
+export BUILD_SP_DIR=$( $PYTHON -c "import pinocchio; print (pinocchio.__file__.split('/pinocchio/__init__.py')[0])")
+export TARGET_SP_DIR=$SP_DIR
 
-  echo "Copying files from $BUILD_NUMPY_INCLUDE_DIRS to $TARGET_NUMPY_INCLUDE_DIRS"
-  mkdir -p $TARGET_NUMPY_INCLUDE_DIRS
-  cp -r $BUILD_NUMPY_INCLUDE_DIRS/numpy $TARGET_NUMPY_INCLUDE_DIRS
+if [[ $CONDA_BUILD_CROSS_COMPILATION == 1 ]]; then
+  echo "Copying files from $BUILD_SP_DIR to $TARGET_SP_DIR"
+  cp -r $BUILD_SP_DIR/pinocchio $TARGET_SP_DIR/pinocchio
 fi
 
 cmake ${CMAKE_ARGS} .. \
