@@ -31,7 +31,7 @@ requirements:
     - boost
     - python
     - example-robot-data
-    - numpy  # [build_platform != target_platform]
+    - numpy 
   run:
     - eigen
     - eigenpy
@@ -39,7 +39,7 @@ requirements:
     - boost
     - python
     - example-robot-data
-    - {{ pin_compatible('numpy') }}  # [build_platform != target_platform]
+    - {{ pin_compatible('numpy') }}
 
 test:
   requires:
