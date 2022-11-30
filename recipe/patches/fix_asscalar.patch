@@ -1,0 +1,284 @@
+From 6731a4484ac072f453d096b68b214ed1885baff2 Mon Sep 17 00:00:00 2001
+From: Guilhem Saurel <guilhem.saurel@laas.fr>
+Date: Tue, 29 Nov 2022 17:48:36 +0100
+Subject: [PATCH] =?UTF-8?q?np.asscalar(x)=20=E2=86=92=20x.item(),=20fix=20?=
+ =?UTF-8?q?#1105?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ bindings/python/crocoddyl/__init__.py         |  4 +--
+ bindings/python/crocoddyl/utils/__init__.py   | 29 +++++++++----------
+ bindings/python/crocoddyl/utils/biped.py      | 20 ++++++-------
+ bindings/python/crocoddyl/utils/quadruped.py  | 16 +++++-----
+ examples/notebooks/cartpole_swing_up.py       |  8 ++---
+ .../notebooks/cartpole_swing_up_sol.ipynb     |  6 ++--
+ examples/notebooks/cartpole_utils.py          |  4 +--
+ examples/notebooks/unicycle_utils.py          |  2 +-
+ 8 files changed, 44 insertions(+), 45 deletions(-)
+
+diff --git a/bindings/python/crocoddyl/__init__.py b/bindings/python/crocoddyl/__init__.py
+index 394ae68b1..528f521d3 100644
+--- bindings/python/crocoddyl/__init__.py
++++ bindings/python/crocoddyl/__init__.py
+@@ -453,13 +453,13 @@ def plotOCSolution(xs=None, us=None, figIndex=1, show=True, figTitle=""):
+         nx = xs[0].shape[0]
+         X = [0.] * nx
+         for i in range(nx):
+-            X[i] = [np.asscalar(x[i]) for x in xs]
++            X[i] = [x[i].item() for x in xs]
+     if us is not None:
+         usPlotIdx = 111
+         nu = us[0].shape[0]
+         U = [0.] * nu
+         for i in range(nu):
+-            U[i] = [np.asscalar(u[i]) if u.shape[0] != 0 else 0 for u in us]
++            U[i] = [u[i].item() if u.shape[0] != 0 else 0 for u in us]
+     if xs is not None and us is not None:
+         xsPlotIdx = 211
+         usPlotIdx = 212
+diff --git a/bindings/python/crocoddyl/utils/__init__.py b/bindings/python/crocoddyl/utils/__init__.py
+index 92f22858e..1b1f4816e 100644
+--- bindings/python/crocoddyl/utils/__init__.py
++++ bindings/python/crocoddyl/utils/__init__.py
+@@ -892,10 +892,9 @@ def calc(self, data, x):
+         data.a0[:] = pinocchio.getFrameAcceleration(self.state.pinocchio, data.pinocchio,
+                                                     self.xref.id).linear + np.cross(data.vw, data.vv)
+         if self.gains[0] != 0.:
+-            data.a0[:] += np.asscalar(
+-                self.gains[0]) * (data.pinocchio.oMf[self.xref.id].translation - self.xref.translation)
++            data.a0[:] += self.gains[0].item() * (data.pinocchio.oMf[self.xref.id].translation - self.xref.translation)
+         if self.gains[1] != 0.:
+-            data.a0[:] += np.asscalar(self.gains[1]) * data.vv
++            data.a0[:] += self.gains[1].item() * data.vv
+ 
+     def calcDiff(self, data, x):
+         v_partial_dq, a_partial_dq, a_partial_dv, a_partial_da = pinocchio.getJointAccelerationDerivatives(
+@@ -911,15 +910,15 @@ def calcDiff(self, data, x):
+         da0_dv += np.dot(data.vw_skew, data.Jc)
+         da0_dv -= np.dot(data.vv_skew, data.Jw)
+ 
+-        if np.asscalar(self.gains[0]) != 0.:
++        if self.gains[0].item() != 0.:
+             R = data.pinocchio.oMf[self.xref.id].rotation
+-            da0_dq += np.asscalar(self.gains[0]) * np.dot(
++            da0_dq += self.gains[0].item() * np.dot(
+                 R,
+                 pinocchio.getFrameJacobian(self.state.pinocchio, data.pinocchio, self.xref.id,
+                                            pinocchio.ReferenceFrame.LOCAL)[:3, :])
+-        if np.asscalar(self.gains[1]) != 0.:
+-            da0_dq += np.asscalar(self.gains[1]) * np.dot(data.fXj[:3, :], v_partial_dq)
+-            da0_dv += np.asscalar(self.gains[1]) * np.dot(data.fXj[:3, :], a_partial_da)
++        if self.gains[1].item() != 0.:
++            da0_dq += self.gains[1].item() * np.dot(data.fXj[:3, :], v_partial_dq)
++            da0_dv += self.gains[1].item() * np.dot(data.fXj[:3, :], a_partial_da)
+         data.da0_dx[:, :] = np.hstack([da0_dq, da0_dv])
+ 
+     def createData(self, data):
+@@ -953,10 +952,10 @@ def calc(self, data, x):
+         data.a0[:] = pinocchio.getFrameAcceleration(self.state.pinocchio, data.pinocchio, self.Mref.id).vector
+         if self.gains[0] != 0.:
+             data.rMf = self.Mref.placement.inverse() * data.pinocchio.oMf[self.Mref.id]
+-            data.a0[:] += np.asscalar(self.gains[0]) * pinocchio.log6(data.rMf).vector
++            data.a0[:] += self.gains[0].item() * pinocchio.log6(data.rMf).vector
+         if self.gains[1] != 0.:
+             v = pinocchio.getFrameVelocity(self.state.pinocchio, data.pinocchio, self.Mref.id).vector
+-            data.a0[:] += np.asscalar(self.gains[1]) * v
++            data.a0[:] += self.gains[1].item() * v
+ 
+     def calcDiff(self, data, x):
+         v_partial_dq, a_partial_dq, a_partial_dv, a_partial_da = pinocchio.getJointAccelerationDerivatives(
+@@ -965,11 +964,11 @@ def calcDiff(self, data, x):
+         data.da0_dq[:, :] = np.dot(data.fXj, a_partial_dq)
+         data.da0_dv[:, :] = np.dot(data.fXj, a_partial_dv)
+ 
+-        if np.asscalar(self.gains[0]) != 0.:
+-            data.da0_dq += np.asscalar(self.gains[0]) * np.dot(pinocchio.Jlog6(data.rMf), data.Jc)
+-        if np.asscalar(self.gains[1]) != 0.:
+-            data.da0_dq += np.asscalar(self.gains[1]) * np.dot(data.fXj, v_partial_dq)
+-            data.da0_dv += np.asscalar(self.gains[1]) * np.dot(data.fXj, a_partial_da)
++        if self.gains[0].item() != 0.:
++            data.da0_dq += self.gains[0].item() * np.dot(pinocchio.Jlog6(data.rMf), data.Jc)
++        if self.gains[1].item() != 0.:
++            data.da0_dq += self.gains[1].item() * np.dot(data.fXj, v_partial_dq)
++            data.da0_dv += self.gains[1].item() * np.dot(data.fXj, a_partial_da)
+         data.da0_dx = np.hstack([data.da0_dq, data.da0_dv])
+ 
+     def createData(self, data):
+diff --git a/bindings/python/crocoddyl/utils/biped.py b/bindings/python/crocoddyl/utils/biped.py
+index d739392e4..c005b05d1 100644
+--- bindings/python/crocoddyl/utils/biped.py
++++ bindings/python/crocoddyl/utils/biped.py
+@@ -65,7 +65,7 @@ def createWalkingProblem(self, x0, stepLength, stepHeight, timeStep, stepKnots,
+         rfPos0 = self.rdata.oMf[self.rfId].translation
+         lfPos0 = self.rdata.oMf[self.lfId].translation
+         comRef = (rfPos0 + lfPos0) / 2
+-        comRef[2] = np.asscalar(pinocchio.centerOfMass(self.rmodel, self.rdata, q0)[2])
++        comRef[2] = pinocchio.centerOfMass(self.rmodel, self.rdata, q0)[2].item()
+ 
+         # Defining the action models along the time instances
+         loco3dModel = []
+@@ -104,7 +104,7 @@ def createJumpingProblem(self, x0, jumpHeight, jumpLength, timeStep, groundKnots
+         rfFootPos0[2] = 0.
+         lfFootPos0[2] = 0.
+         comRef = (rfFootPos0 + lfFootPos0) / 2
+-        comRef[2] = np.asscalar(pinocchio.centerOfMass(self.rmodel, self.rdata, q0)[2])
++        comRef[2] = pinocchio.centerOfMass(self.rmodel, self.rdata, q0)[2].item()
+ 
+         self.rWeight = 1e1
+         loco3dModel = []
+@@ -412,15 +412,15 @@ def plotSolution(solver, bounds=True, figIndex=1, figTitle="", show=True):
+         X_LB = [0.] * nx
+         X_UB = [0.] * nx
+     for i in range(nx):
+-        X[i] = [np.asscalar(x[i]) for x in xs]
++        X[i] = [x[i].item() for x in xs]
+         if bounds:
+-            X_LB[i] = [np.asscalar(x[i]) for x in xs_lb]
+-            X_UB[i] = [np.asscalar(x[i]) for x in xs_ub]
++            X_LB[i] = [x[i].item() for x in xs_lb]
++            X_UB[i] = [x[i].item() for x in xs_ub]
+     for i in range(nu):
+-        U[i] = [np.asscalar(u[i]) if u.shape[0] != 0 else 0 for u in us]
++        U[i] = [u[i].item() if u.shape[0] != 0 else 0 for u in us]
+         if bounds:
+-            U_LB[i] = [np.asscalar(u[i]) if u.shape[0] != 0 else np.nan for u in us_lb]
+-            U_UB[i] = [np.asscalar(u[i]) if u.shape[0] != 0 else np.nan for u in us_ub]
++            U_LB[i] = [u[i].item() if u.shape[0] != 0 else np.nan for u in us_lb]
++            U_UB[i] = [u[i].item() if u.shape[0] != 0 else np.nan for u in us_ub]
+ 
+     # Plotting the joint positions, velocities and torques
+     plt.figure(figIndex)
+@@ -485,8 +485,8 @@ def plotSolution(solver, bounds=True, figIndex=1, figTitle="", show=True):
+     for x in xs:
+         q = x[:rmodel.nq]
+         c = pinocchio.centerOfMass(rmodel, rdata, q)
+-        Cx.append(np.asscalar(c[0]))
+-        Cy.append(np.asscalar(c[1]))
++        Cx.append(c[0].item())
++        Cy.append(c[1].item())
+     plt.plot(Cx, Cy)
+     plt.title('CoM position')
+     plt.xlabel('x [m]')
+diff --git a/bindings/python/crocoddyl/utils/quadruped.py b/bindings/python/crocoddyl/utils/quadruped.py
+index 5605bb3c0..d49261b53 100644
+--- bindings/python/crocoddyl/utils/quadruped.py
++++ bindings/python/crocoddyl/utils/quadruped.py
+@@ -647,15 +647,15 @@ def plotSolution(solver, bounds=True, figIndex=1, figTitle="", show=True):
+         X_LB = [0.] * nx
+         X_UB = [0.] * nx
+     for i in range(nx):
+-        X[i] = [np.asscalar(x[i]) for x in xs]
++        X[i] = [x[i].item() for x in xs]
+         if bounds:
+-            X_LB[i] = [np.asscalar(x[i]) for x in xs_lb]
+-            X_UB[i] = [np.asscalar(x[i]) for x in xs_ub]
++            X_LB[i] = [x[i].item() for x in xs_lb]
++            X_UB[i] = [x[i].item() for x in xs_ub]
+     for i in range(nu):
+-        U[i] = [np.asscalar(u[i]) if u.shape[0] != 0 else 0 for u in us]
++        U[i] = [u[i].item() if u.shape[0] != 0 else 0 for u in us]
+         if bounds:
+-            U_LB[i] = [np.asscalar(u[i]) if u.shape[0] != 0 else np.nan for u in us_lb]
+-            U_UB[i] = [np.asscalar(u[i]) if u.shape[0] != 0 else np.nan for u in us_ub]
++            U_LB[i] = [u[i].item() if u.shape[0] != 0 else np.nan for u in us_lb]
++            U_UB[i] = [u[i].item() if u.shape[0] != 0 else np.nan for u in us_ub]
+ 
+     # Plotting the joint positions, velocities and torques
+     plt.figure(figIndex)
+@@ -767,8 +767,8 @@ def plotSolution(solver, bounds=True, figIndex=1, figTitle="", show=True):
+     for x in xs:
+         q = x[:nq]
+         c = pinocchio.centerOfMass(rmodel, rdata, q)
+-        Cx.append(np.asscalar(c[0]))
+-        Cy.append(np.asscalar(c[1]))
++        Cx.append(c[0].item())
++        Cy.append(c[1].item())
+     plt.plot(Cx, Cy)
+     plt.title('CoM position')
+     plt.xlabel('x [m]')
+diff --git a/examples/notebooks/cartpole_swing_up.py b/examples/notebooks/cartpole_swing_up.py
+index 62c462e7f..c3ba808b2 100644
+--- examples/notebooks/cartpole_swing_up.py
++++ examples/notebooks/cartpole_swing_up.py
+@@ -19,8 +19,8 @@ def __init__(self):
+     def calc(self, data, x, u=None):
+         if u is None: u = model.unone
+         # Getting the state and control variables
+-        y, th, ydot, thdot = np.asscalar(x[0]), np.asscalar(x[1]), np.asscalar(x[2]), np.asscalar(x[3])
+-        f = np.asscalar(u[0])
++        y, th, ydot, thdot = (x[0].item(), (x[1].item(), (x[2].item(), (x[3].item()
++        f = u[0].item()
+ 
+         # Shortname for system parameters
+         m1, m2, l, g = self.m1, self.m2, self.l, self.g
+@@ -35,7 +35,7 @@ def calc(self, data, x, u=None):
+ 
+         # Computing the cost residual and value
+         data.r = np.matrix(self.costWeights * np.array([s, 1 - c, y, ydot, thdot, f])).T
+-        data.cost = .5 * np.asscalar(sum(np.asarray(data.r)**2))
++        data.cost = .5 * sum(np.asarray(data.r)**2).item()
+ 
+     def calcDiff(self, data, x, u=None):
+         # Advance user might implement the derivatives
+@@ -78,4 +78,4 @@ def calcDiff(self, data, x, u=None):
+ ddp.solve([], [], 300)
+ 
+ # Display animation
+-animateCartpole(ddp.xs, show=True)
+\ No newline at end of file
++animateCartpole(ddp.xs, show=True)
+diff --git a/examples/notebooks/cartpole_swing_up_sol.ipynb b/examples/notebooks/cartpole_swing_up_sol.ipynb
+index 56b2e773f..805a3a1bd 100644
+--- examples/notebooks/cartpole_swing_up_sol.ipynb
++++ examples/notebooks/cartpole_swing_up_sol.ipynb
+@@ -66,8 +66,8 @@
+     "    def calc(self, data, x, u=None):\n",
+     "        if u is None: u=model.unone\n",
+     "        # Getting the state and control variables\n",
+-    "        y, th, ydot, thdot = np.asscalar(x[0]), np.asscalar(x[1]), np.asscalar(x[2]), np.asscalar(x[3])\n",
+-    "        f = np.asscalar(u[0])\n",
++    "        y, th, ydot, thdot = x[0].item(), x[1].item(), x[2].item(), x[3].item()\n",
++    "        f = u[0].item()\n",
+     "\n",
+     "        # Shortname for system parameters\n",
+     "        m1, m2, l, g = self.m1, self.m2, self.l, self.g\n",
+@@ -82,7 +82,7 @@
+     "\n",
+     "        # Computing the cost residual and value\n",
+     "        data.r = np.matrix(self.costWeights * np.array([ s, 1-c, y, ydot, thdot, f ])).T\n",
+-    "        data.cost = .5* np.asscalar(sum(np.asarray(data.r)**2))\n",
++    "        data.cost = .5 * sum(np.asarray(data.r)**2).item()\n",
+     "\n",
+     "    def calcDiff(self,data,x,u=None):\n",
+     "        # Advance user might implement the derivatives\n",
+diff --git a/examples/notebooks/cartpole_utils.py b/examples/notebooks/cartpole_utils.py
+index a99c38a21..8c672baca 100644
+--- examples/notebooks/cartpole_utils.py
++++ examples/notebooks/cartpole_utils.py
+@@ -22,9 +22,9 @@ def init():
+         return patch, line, time_text
+ 
+     def animate(i):
+-        x_cart = np.asscalar(xs[i][0])
++        x_cart = xs[i][0].item()
+         y_cart = 0.
+-        theta = np.asscalar(xs[i][1])
++        theta = xs[i][1].item()
+         patch.set_xy([x_cart - cart_size / 2, y_cart - cart_size / 2])
+         x_pole = np.cumsum([x_cart, -pole_length * sin(theta)])
+         y_pole = np.cumsum([y_cart, pole_length * cos(theta)])
+diff --git a/examples/notebooks/unicycle_utils.py b/examples/notebooks/unicycle_utils.py
+index 52909981f..ca26d4d43 100644
+--- examples/notebooks/unicycle_utils.py
++++ examples/notebooks/unicycle_utils.py
+@@ -4,7 +4,7 @@
+ 
+ def plotUnicycle(x):
+     sc, delta = .1, .1
+-    a, b, th = np.asscalar(x[0]), np.asscalar(x[1]), np.asscalar(x[2])
++    a, b, th = x[0].item(), x[1].item(), x[2].item()
+     c, s = np.cos(th), np.sin(th)
+     refs = [
+         plt.arrow(a - sc / 2 * c - delta * s, b - sc / 2 * s + delta * c, c * sc, s * sc, head_width=.05),
