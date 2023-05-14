@@ -14,7 +14,7 @@ fi
 
 cmake ${CMAKE_ARGS} .. \
       -DCMAKE_BUILD_TYPE=Release \
-      -DBUILD_UNIT_TESTS=OFF \
+      -DBUILD_TESTING=OFF \
       -DBUILD_BENCHMARK=OFF \
       -DBUILD_EXAMPLES=OFF \
       -DCMAKE_CXX_STANDARD=14 \
