@@ -31,12 +31,14 @@ requirements:
     - boost
     - python
     - numpy
+    - openmp
   run:
     - eigen
     - eigenpy
     - pinocchio
     - boost
     - python
+    - openmp
     - {{ pin_compatible('numpy') }}
 
 test:
