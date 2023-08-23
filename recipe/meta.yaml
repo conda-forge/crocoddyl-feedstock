@@ -30,7 +30,6 @@ requirements:
     - pinocchio
     - boost
     - python
-    - example-robot-data
     - numpy
   run:
     - eigen
@@ -38,7 +37,6 @@ requirements:
     - pinocchio
     - boost
     - python
-    - example-robot-data
     - {{ pin_compatible('numpy') }}
 
 test:
