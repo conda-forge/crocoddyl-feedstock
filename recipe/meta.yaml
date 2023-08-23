@@ -32,6 +32,7 @@ requirements:
     - python
     - numpy
     - openmp
+    - ipopt
   run:
     - eigen
     - eigenpy
@@ -39,6 +40,7 @@ requirements:
     - boost
     - python
     - openmp
+    - ipopt
     - {{ pin_compatible('numpy') }}
 
 test:
