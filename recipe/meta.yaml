@@ -36,7 +36,6 @@ requirements:
     - eigen
     - eigenpy
     - pinocchio
-    - libboost-python-devel
     - python
     - example-robot-data
     - {{ pin_compatible('numpy') }}
