@@ -277,4 +277,5 @@ Feedstock Maintainers
 =====================
 
 * [@jcarpent](https://github.com/jcarpent/)
+* [@jorisv](https://github.com/jorisv/)
 
