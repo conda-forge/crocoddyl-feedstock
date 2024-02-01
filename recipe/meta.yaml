@@ -62,5 +62,6 @@ about:
 
 extra:
   recipe-maintainers:
+    - olivier-roussel
     - jorisv
     - jcarpent
