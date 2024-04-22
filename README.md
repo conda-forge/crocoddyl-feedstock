@@ -278,4 +278,5 @@ Feedstock Maintainers
 
 * [@jcarpent](https://github.com/jcarpent/)
 * [@jorisv](https://github.com/jorisv/)
+* [@olivier-roussel](https://github.com/olivier-roussel/)
 
