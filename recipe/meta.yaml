@@ -24,15 +24,12 @@ requirements:
     - {{ stdlib("c") }}
     - cmake
     - make
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - numpy                                  # [build_platform != target_platform]
-    - pinocchio                              # [build_platform != target_platform]
   host:
     - eigen
     - eigenpy
     - pinocchio
     - libboost-python-devel
+    - libboost-devel
     - python
     - example-robot-data
     - numpy
