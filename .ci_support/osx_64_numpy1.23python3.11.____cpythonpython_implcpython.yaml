@@ -14,20 +14,25 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '16'
+libboost_devel:
+- '1.84'
 libboost_python_devel:
 - '1.84'
 macos_machine:
 - x86_64-apple-darwin13.4.0
 numpy:
-- '1.22'
+- '1.23'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.9.* *_cpython
+- 3.11.* *_cpython
+python_impl:
+- cpython
 target_platform:
 - osx-64
 zip_keys:
 - - python
   - numpy
+  - python_impl
