@@ -6,10 +6,19 @@ cd build
 export BUILD_SP_DIR=$( $PYTHON -c "import pinocchio; print (pinocchio.__file__.split('/pinocchio/__init__.py')[0])")
 export TARGET_SP_DIR=$SP_DIR
 
+export BUILD_NUMPY_INCLUDE_DIRS=$( $PYTHON -c "import numpy; print (numpy.get_include())")
+export TARGET_NUMPY_INCLUDE_DIRS=$SP_DIR/numpy/core/include
+
+echo $BUILD_NUMPY_INCLUDE_DIRS
+echo $TARGET_NUMPY_INCLUDE_DIRS
+
 if [[ $CONDA_BUILD_CROSS_COMPILATION == 1 ]]; then
   echo "Copying files from $BUILD_SP_DIR to $TARGET_SP_DIR"
   cp -r $BUILD_SP_DIR/pinocchio $TARGET_SP_DIR/pinocchio
-  cp -r $BUILD_SP_DIR/numpy $TARGET_SP_DIR/numpy
+  cp -r $BUILD_SP_DIR/numpy $TARGET_SP_DIR/numpy  
+  export Python3_NumPy_INCLUDE_DIR=$TARGET_NUMPY_INCLUDE_DIRS
+else
+  export Python3_NumPy_INCLUDE_DIR=$BUILD_NUMPY_INCLUDE_DIRS
 fi
 
 cmake ${CMAKE_ARGS} .. \
@@ -18,6 +27,7 @@ cmake ${CMAKE_ARGS} .. \
       -DBUILD_BENCHMARK=OFF \
       -DBUILD_EXAMPLES=OFF \
       -DCMAKE_CXX_STANDARD=14 \
+      -DPython3_NumPy_INCLUDE_DIR=$Python3_NumPy_INCLUDE_DIR \
       -DCMAKE_CROSSCOMPILING=$CONDA_BUILD_CROSS_COMPILATION \
       -DCMAKE_CROSSCOMPILING_EMULATOR=$CONDA_BUILD_CROSS_COMPILATION \
       -DPYTHON_EXECUTABLE=$PYTHON
