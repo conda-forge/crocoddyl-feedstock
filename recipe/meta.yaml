@@ -61,6 +61,7 @@ about:
 
 extra:
   recipe-maintainers:
+    - ManifoldFR
     - olivier-roussel
     - jorisv
     - jcarpent
