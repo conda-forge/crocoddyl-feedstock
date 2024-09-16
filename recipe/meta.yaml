@@ -10,9 +10,8 @@ source:
   sha256: 85993df25e569dfbecf545d84e38a9a7e4d0e166ba4cb80d7e51947436d3b269
 
 build:
-  number: 3
-  # Skip pypy build until pinocchio pypy is fixed
-  skip: true  # [win or python_impl == 'pypy']
+  number: 4
+  skip: true  # [win]
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x.x') }}
 
