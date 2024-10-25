@@ -19,15 +19,15 @@ libboost_devel:
 libboost_python_devel:
 - '1.86'
 numpy:
-- '1.26'
+- '2'
 pin_run_as_build:
   python:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.12.* *_cpython
+- 3.13.* *_cp313
 target_platform:
-- linux-64
+- linux-ppc64le
 zip_keys:
 - - c_stdlib_version
   - cdt_name
