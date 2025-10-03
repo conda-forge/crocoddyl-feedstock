@@ -1,5 +1,5 @@
 {% set name = "crocoddyl" %}
-{% set version = "3.0.1" %}
+{% set version = "3.1.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,10 +7,10 @@ package:
 
 source:
   url: https://github.com/loco-3d/{{ name }}/releases/download/v{{ version }}/{{ name }}-{{ version }}.tar.gz
-  sha256: dcbb1245eccf22597bd21472d1e7267ebbf27f491bb440a3618f225800f8f790
+  sha256: 3c069ce56ad0f9b71343ffe1a1ba24404122f90ad6f37be6d92370e4f36028ab
 
 build:
-  number: 4
+  number: 0
   skip: true  # [win]
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x.x') }}
