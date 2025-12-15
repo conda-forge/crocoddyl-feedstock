@@ -10,7 +10,7 @@ source:
   sha256: dbcfea54334c4f683b8e6cad5f93cee5e9f5b176070e0cfaffa03965fc6f8b37
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win]
   run_exports:
     - {{ pin_subpackage(name, max_pin='x.x.x') }}
@@ -33,6 +33,7 @@ requirements:
     - libboost-devel
     - python
     - example-robot-data
+    - example-robot-data-loaders
     - numpy
   run:
     - eigen
@@ -40,6 +41,7 @@ requirements:
     - pinocchio
     - python
     - example-robot-data
+    - example-robot-data-loaders
 
 test:
   requires:
