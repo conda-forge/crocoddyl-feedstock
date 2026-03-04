@@ -15,8 +15,6 @@ source:
 build:
   number: 2
   skip: win
-  run_exports:
-    - ${{ pin_subpackage(name, upper_bound='x.x.x') }}
 
 requirements:
   build:
@@ -45,6 +43,8 @@ requirements:
     - pinocchio
     - python
     - example-robot-data
+  run_exports:
+    - ${{ pin_subpackage(name, upper_bound='x.x.x') }}
 
 tests:
   - python:
