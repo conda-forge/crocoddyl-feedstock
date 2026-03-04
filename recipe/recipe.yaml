@@ -30,6 +30,7 @@ requirements:
     - ninja
   host:
     - eigen
+    - eigen-abi-devel
     - eigenpy
     - pinocchio
     - libboost-python-devel
