@@ -24,6 +24,7 @@ else
 fi
 
 cmake ${CMAKE_ARGS} .. \
+      -GNinja \
       -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_TESTING=OFF \
       -DBUILD_BENCHMARK=OFF \
@@ -36,8 +37,8 @@ cmake ${CMAKE_ARGS} .. \
       -DCMAKE_CROSSCOMPILING_EMULATOR=$CONDA_BUILD_CROSS_COMPILATION \
       -DPYTHON_EXECUTABLE=$PYTHON
 
-make
-make install
+ninja -j${CPU_COUNT}
+ninja install
 
 if [[ $CONDA_BUILD_CROSS_COMPILATION == 1 ]]; then
   echo $BUILD_PREFIX

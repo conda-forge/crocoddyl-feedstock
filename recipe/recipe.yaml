@@ -1,0 +1,74 @@
+schema_version: 1
+
+context:
+  name: crocoddyl
+  version: "3.0.1"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://github.com/loco-3d/${{ name }}/releases/download/v${{ version }}/${{ name }}-${{ version }}.tar.gz
+  sha256: dcbb1245eccf22597bd21472d1e7267ebbf27f491bb440a3618f225800f8f790
+
+build:
+  number: 1
+  skip: win
+  run_exports:
+    - ${{ pin_subpackage(name, upper_bound='x.x.x') }}
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - numpy
+        - pinocchio
+    - ${{ compiler('cxx') }}
+    - ${{ stdlib("c") }}
+    - cmake
+    - ninja
+  host:
+    - eigen
+    - eigenpy
+    - pinocchio
+    - libboost-python-devel
+    - libboost-devel
+    - python
+    - example-robot-data
+    - numpy
+  run:
+    - eigen
+    - eigenpy
+    - pinocchio
+    - python
+    - example-robot-data
+
+tests:
+  - python:
+      imports:
+        - crocoddyl
+  - requirements:
+      run:
+        - pkg-config
+    script:
+      - pkg-config --modversion ${{ name }}
+      - if: not win
+        then: test -f $PREFIX/lib/lib${{ name }}${SHLIB_EXT}
+
+about:
+  license: BSD-3-Clause
+  license_file: LICENSE
+  summary: Crocoddyl is an optimal control library for robot control under contact sequence. Its solver is based on various efficient Differential Dynamic Programming (DDP)-like algorithms.
+  homepage: http://github.com/loco-3d/crocoddyl
+  repository: https://github.com/loco-3d/crocoddyl
+
+extra:
+  recipe-maintainers:
+    - ManifoldFR
+    - olivier-roussel
+    - jorisv
+    - jcarpent
+
