@@ -11,9 +11,12 @@ package:
 source:
   url: https://github.com/loco-3d/${{ name }}/archive/v${{ version }}.tar.gz
   sha256: bfc29c806ed452a2ed1d1f7431b8625a0e8a9af3a049c50cf8ea128e700148e0
+  patches:
+    # Fixed on devel branch
+    - patches/0001-fix-Eigen5-build-issue.patch
 
 build:
-  number: 0
+  number: 1
   skip: win
 
 requirements:
@@ -41,7 +44,7 @@ requirements:
   run:
     - eigen
     - eigenpy
-    - pinocchio
+    - pinocchio-python
     - python
     - example-robot-data
   run_exports:
