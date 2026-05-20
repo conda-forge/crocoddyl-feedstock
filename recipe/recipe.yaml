@@ -44,7 +44,7 @@ requirements:
   run:
     - eigen
     - eigenpy
-    - pinocchio
+    - pinocchio-python
     - python
     - example-robot-data
   run_exports:
