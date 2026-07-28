@@ -16,7 +16,7 @@ source:
     - patches/0001-fix-Eigen5-build-issue.patch
 
 build:
-  number: 2
+  number: 3
   skip: win
 
 requirements:
